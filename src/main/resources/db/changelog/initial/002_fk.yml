@@ -1,0 +1,55 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_fk_quizzes_creator
+      author: eric
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: quizzes
+            baseColumnNames: creator_id
+            constraintName: fk_quizzes_creator
+            referencedTableName: users
+            referencedColumnNames: id
+
+  - changeSet:
+      id: add_fk_questions_quiz
+      author: eric
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: questions
+            baseColumnNames: quiz_id
+            constraintName: fk_questions_quiz
+            referencedTableName: quizzes
+            referencedColumnNames: id
+
+  - changeSet:
+      id: add_fk_results_user
+      author: eric
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: quiz_results
+            baseColumnNames: user_id
+            constraintName: fk_results_user
+            referencedTableName: users
+            referencedColumnNames: id
+
+  - changeSet:
+      id: add_fk_results_quiz
+      author: eric
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: quiz_results
+            baseColumnNames: quiz_id
+            constraintName: fk_results_quiz
+            referencedTableName: quizzes
+            referencedColumnNames: id
+
+  - changeSet:
+      id: add_fk_options_question
+      author: eric
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: options
+            baseColumnNames: question_id
+            constraintName: fk_options_question
+            referencedTableName: questions
+            referencedColumnNames: id
