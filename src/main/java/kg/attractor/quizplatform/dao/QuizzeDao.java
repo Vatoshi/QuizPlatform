@@ -3,7 +3,9 @@ package kg.attractor.quizplatform.dao;
 import kg.attractor.quizplatform.dto.OptionDto;
 import kg.attractor.quizplatform.dto.QuestionDto;
 import kg.attractor.quizplatform.dto.QuizzeDto;
+import kg.attractor.quizplatform.dto.GetAllQuizDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -11,12 +13,24 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
 public class QuizzeDao {
     private final JdbcTemplate jdbcTemplate;
     private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+
+    public String getQuizTitle(String quiztitle) {
+        String sql = "select title from quizzes where title = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, String.class, quiztitle);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
 
     public void createQuiz(QuizzeDto quizzeDto, Long userId) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -59,4 +73,21 @@ public class QuizzeDao {
         String sql = "select id from users where email = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, username);
     }
+
+    public List<GetAllQuizDto> getAllQuiz() {
+        String sqlGetName = "select title from quizzes";
+        List<String> quizNames = jdbcTemplate.queryForList(sqlGetName, String.class);
+        List<GetAllQuizDto> getAllQuizDtos = new ArrayList<>();
+        for(String quizName : quizNames) {
+            String sql = "select q.id, q.quiz_id, qu.title "
+                    + "from questions q "
+                    + "join quizzes qu on q.quiz_id = qu.id "
+                    + "where qu.title = ?";
+            List<Map<String, Object>> questionList = jdbcTemplate.queryForList(sql, quizName);
+            int sum = questionList.size();
+            getAllQuizDtos.add(new GetAllQuizDto(quizName,sum));
+        }
+        return getAllQuizDtos;
+    }
+
 }

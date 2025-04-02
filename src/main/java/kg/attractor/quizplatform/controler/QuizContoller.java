@@ -1,6 +1,7 @@
 package kg.attractor.quizplatform.controler;
 
 import jakarta.validation.Valid;
+import kg.attractor.quizplatform.dto.GetAllQuizDto;
 import kg.attractor.quizplatform.dto.QuizzeDto;
 import kg.attractor.quizplatform.servise.QuizzeServise;
 import lombok.RequiredArgsConstructor;
@@ -9,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,5 +26,10 @@ public class QuizContoller {
 
         quizzeService.createQuizze(quizzeDto, username);
         return ResponseEntity.status(HttpStatus.CREATED).body(quizzeDto);
+    }
+
+    @GetMapping("quizzes")
+    public ResponseEntity<List<GetAllQuizDto>> getAllQuiz() {
+        return ResponseEntity.status(HttpStatus.FOUND).body(quizzeService.getQuizzes());
     }
 }
