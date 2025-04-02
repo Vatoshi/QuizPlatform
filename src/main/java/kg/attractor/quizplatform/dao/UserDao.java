@@ -3,26 +3,29 @@ package kg.attractor.quizplatform.dao;
 
 import kg.attractor.quizplatform.dto.UserDto;
 import kg.attractor.quizplatform.exeptions.EmailExist;
+import kg.attractor.quizplatform.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
 public class UserDao {
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
-    public void createUser(UserDto u) {
-        EmailExist(u.getEmail());
-        String sql = "insert into users (name, email, password) values (?, ?, ?)";
-        jdbcTemplate.update(sql,u.getUsername(),u.getEmail(),u.getPassword());
+    public void createUser(User u) {
+        String sql = "insert into users (username, password, email, enabled, role_id) values (?,?,?,?,?)";
+        jdbcTemplate.update(sql, u.getUsername(), u.getPassword(), u.getEmail(), u.getEnabled(), u.getRoleId());
     }
 
-    public void EmailExist(String email) {
-        String sql = "select id from users where email = ?";
-        Integer id = jdbcTemplate.queryForObject(sql, Integer.class, email);
-        if (id != null) {
-            throw new EmailExist("account with email " + email + " already exist");
+    public String getEmailExist(String email) {
+        String sql = "select email from users where email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, String.class, email);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
         }
     }
 }

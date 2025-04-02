@@ -52,7 +52,7 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/user/login").hasAnyAuthority("USER")
+                        .requestMatchers("/quiz/quizzes").hasAnyAuthority("USER")
                         .anyRequest().permitAll());
 
         return http.build();

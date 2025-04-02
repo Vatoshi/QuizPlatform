@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import kg.attractor.quizplatform.dto.UserDto;
 import kg.attractor.quizplatform.servise.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,9 +16,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RequestMapping("/user")
 public class UserController {
-    private UserService userService;
+    private final UserService userService;
 
-    @PostMapping("/create")
+    @PostMapping("/register")
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         userService.createUser(userDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
