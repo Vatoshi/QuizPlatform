@@ -66,6 +66,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
 
+
   - changeSet:
       id: create_question_table
       author: eric

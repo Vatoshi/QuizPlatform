@@ -9,6 +9,7 @@ databaseChangeLog:
             constraintName: fk_quizzes_creator
             referencedTableName: users
             referencedColumnNames: id
+            onDelete: cascade
 
   - changeSet:
       id: add_fk_questions_quiz
@@ -20,6 +21,8 @@ databaseChangeLog:
             constraintName: fk_questions_quiz
             referencedTableName: quizzes
             referencedColumnNames: id
+            onDelete: cascade
+
 
   - changeSet:
       id: add_fk_results_user
@@ -31,6 +34,7 @@ databaseChangeLog:
             constraintName: fk_results_user
             referencedTableName: users
             referencedColumnNames: id
+            onDelete: cascade
 
   - changeSet:
       id: add_fk_results_quiz
@@ -42,6 +46,7 @@ databaseChangeLog:
             constraintName: fk_results_quiz
             referencedTableName: quizzes
             referencedColumnNames: id
+            onDelete: cascade
 
   - changeSet:
       id: add_fk_options_question
@@ -53,3 +58,4 @@ databaseChangeLog:
             constraintName: fk_options_question
             referencedTableName: questions
             referencedColumnNames: id
+            onDelete: cascade

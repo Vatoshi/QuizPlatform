@@ -5,6 +5,7 @@ import kg.attractor.quizplatform.dao.UserStatisticDao;
 import kg.attractor.quizplatform.dto.groupedDto.UserStatistic;
 import kg.attractor.quizplatform.dto.modelsDto.UserDto;
 import kg.attractor.quizplatform.exeptions.EmailExist;
+import kg.attractor.quizplatform.exeptions.NotFound;
 import kg.attractor.quizplatform.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -34,13 +35,12 @@ public class UserService {
         return userDto;
     }
 
-    public UserStatistic getUserStat(String username) {
-        Long userId = userStatisticDao.UserId(username);
+    public UserStatistic getUserStat(Long userId) {
         Integer passedQuiz = userStatisticDao.CountAllPassedQuizzes(userId);
+        if (passedQuiz == null) { throw new NotFound("The user has no statistics (has not completed any quizzes) or not exist");}
         Double averageScore = userStatisticDao.AverageScore(userId);
         String name = userStatisticDao.getName(userId);
-        UserStatistic userStatistic = new UserStatistic(name,passedQuiz,averageScore);
-        return userStatistic;
+        return new UserStatistic(name,passedQuiz,averageScore);
     }
 
     public List<UserStatistic> getUserStatisticsLeaderboard() {
@@ -50,6 +50,7 @@ public class UserService {
             String name = userStatisticDao.getName(userId);
             Double averageScore = userStatisticDao.AverageScore(userId);
             Integer passedQuiz = userStatisticDao.CountAllPassedQuizzes(userId);
+            if (passedQuiz == null) {continue;}
             UserStatistic curentUser = new UserStatistic(name,passedQuiz,averageScore);
             userStatistics.add(curentUser);
         }
