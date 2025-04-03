@@ -16,6 +16,8 @@ public class UserDao {
     private final JdbcTemplate jdbcTemplate;
 
     public void createUser(User u) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+        u.setPassword(encoder.encode(u.getPassword()));
         String sql = "insert into users (username, password, email, enabled, role_id) values (?,?,?,?,?)";
         jdbcTemplate.update(sql, u.getUsername(), u.getPassword(), u.getEmail(), u.getEnabled(), u.getRoleId());
     }

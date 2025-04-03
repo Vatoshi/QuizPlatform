@@ -28,4 +28,9 @@ public class GlobalControllerAdvice {
     private ResponseEntity<ErrorResponseBody> illegalArgument(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(errorService.makeResponse(e, "illegal argument", HttpStatus.BAD_REQUEST));
     }
+
+    @ExceptionHandler(NotFound.class)
+    private ResponseEntity<ErrorResponseBody> notFound(NotFound e) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorService.makeResponse(e, "Not found", HttpStatus.NOT_FOUND));
+    }
 }

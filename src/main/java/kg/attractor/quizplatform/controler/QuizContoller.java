@@ -1,8 +1,7 @@
 package kg.attractor.quizplatform.controler;
 
 import jakarta.validation.Valid;
-import kg.attractor.quizplatform.dto.GetAllQuizDto;
-import kg.attractor.quizplatform.dto.QuizzeDto;
+import kg.attractor.quizplatform.dto.*;
 import kg.attractor.quizplatform.servise.QuizzeServise;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,6 +18,11 @@ import java.util.List;
 public class QuizContoller {
     private final QuizzeServise quizzeService;
 
+    @GetMapping
+    public ResponseEntity<String> getAllQuizzes(){
+        return ResponseEntity.status(HttpStatus.OK).body("WELCOME TO Quiz Platform, should register to play");
+    }
+
     @PostMapping("quizzes")
     public ResponseEntity<QuizzeDto> createQuiz(@Valid @RequestBody QuizzeDto quizzeDto) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -31,5 +35,16 @@ public class QuizContoller {
     @GetMapping("quizzes")
     public ResponseEntity<List<GetAllQuizDto>> getAllQuiz() {
         return ResponseEntity.status(HttpStatus.FOUND).body(quizzeService.getQuizzes());
+    }
+
+    //получение квиза с варинатами ответа без ответа
+    @GetMapping("quizzes/{quizId}")
+    public ResponseEntity<HeaderWithQuiz> getQuiz(@PathVariable Long quizId) {
+        return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getQuizToAnswer(quizId));
+    }
+
+    @PostMapping("quizzes/{quizId}/solve")
+    public ResponseEntity<List<QuesAndAnswerDto>> getSolveQuiz(@PathVariable Long quizId, @RequestBody List<String> answers) {
+        return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getSolveQuiz(quizId, answers));
     }
 }

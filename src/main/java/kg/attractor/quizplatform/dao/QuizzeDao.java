@@ -1,9 +1,6 @@
 package kg.attractor.quizplatform.dao;
 
-import kg.attractor.quizplatform.dto.OptionDto;
-import kg.attractor.quizplatform.dto.QuestionDto;
-import kg.attractor.quizplatform.dto.QuizzeDto;
-import kg.attractor.quizplatform.dto.GetAllQuizDto;
+import kg.attractor.quizplatform.dto.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,7 +18,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class QuizzeDao {
     private final JdbcTemplate jdbcTemplate;
-    private final NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     public String getQuizTitle(String quiztitle) {
         String sql = "select title from quizzes where title = ?";
@@ -85,9 +81,15 @@ public class QuizzeDao {
                     + "where qu.title = ?";
             List<Map<String, Object>> questionList = jdbcTemplate.queryForList(sql, quizName);
             int sum = questionList.size();
-            getAllQuizDtos.add(new GetAllQuizDto(quizName,sum));
+            Long id = quiqId(quizName);
+            getAllQuizDtos.add(new GetAllQuizDto(id,quizName,sum));
         }
         return getAllQuizDtos;
     }
 
+
+    private Long quiqId(String name) {
+        String sql = "select id from quizzes where title = ?";
+        return jdbcTemplate.queryForObject(sql, Long.class, name);
+    }
 }

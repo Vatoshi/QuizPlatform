@@ -1,15 +1,17 @@
 package kg.attractor.quizplatform.dto;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class GetAllQuizDto {
-    private Long id;
-    private String quizName;
-    private Integer questionCount;
+public class QuizWithQuesDto {
+    private String question;
+    List<OptionsDto> answers;
 }

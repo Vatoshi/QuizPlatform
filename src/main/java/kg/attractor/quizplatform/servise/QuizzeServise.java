@@ -1,8 +1,8 @@
 package kg.attractor.quizplatform.servise;
 
+import kg.attractor.quizplatform.dao.QuizWithQuesDao;
 import kg.attractor.quizplatform.dao.QuizzeDao;
-import kg.attractor.quizplatform.dto.QuizzeDto;
-import kg.attractor.quizplatform.dto.GetAllQuizDto;
+import kg.attractor.quizplatform.dto.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class QuizzeServise {
     private final QuizzeDao quizzeDao;
+    private final QuizWithQuesDao quizWithQuesDao;
 
     public QuizzeDto createQuizze(QuizzeDto quizzeDto, String username) {
         if (quizzeDto.getTitle().equals(quizzeDao.getQuizTitle(quizzeDto.getTitle()))) {
@@ -26,5 +27,18 @@ public class QuizzeServise {
 
     public List<GetAllQuizDto> getQuizzes() {
         return quizzeDao.getAllQuiz();
+    }
+
+    public HeaderWithQuiz getQuizToAnswer(Long quizId) {
+        String quizTitle = quizWithQuesDao.getTitle(quizId);
+        HeaderWithQuiz headerWithQuiz = new HeaderWithQuiz(quizTitle,
+                "Отправлять ответы поочередно с верху в вниз, АЙДИ данного квиза " + quizId
+                + ". Также не забывайте пройти квиз можно лишь раз",
+                quizWithQuesDao.getQuizToAnswer(quizId));
+        return headerWithQuiz;
+    }
+
+    public List<QuesAndAnswerDto> getSolveQuiz(Long quizId, List<String> answers) {
+        return quizWithQuesDao.getSolveQuiz(quizId, answers);
     }
 }
