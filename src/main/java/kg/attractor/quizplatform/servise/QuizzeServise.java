@@ -2,7 +2,11 @@ package kg.attractor.quizplatform.servise;
 
 import kg.attractor.quizplatform.dao.QuizWithQuesDao;
 import kg.attractor.quizplatform.dao.QuizzeDao;
-import kg.attractor.quizplatform.dto.*;
+import kg.attractor.quizplatform.dto.groupedDto.GetAllQuizDto;
+import kg.attractor.quizplatform.dto.groupedDto.HeaderWithQuesAndAnswer;
+import kg.attractor.quizplatform.dto.groupedDto.HeaderWithQuiz;
+import kg.attractor.quizplatform.dto.groupedDto.QuesAndAnswerDto;
+import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +42,7 @@ public class QuizzeServise {
         return headerWithQuiz;
     }
 
-    public List<QuesAndAnswerDto> getSolveQuiz(Long quizId, List<String> answers) {
+    public HeaderWithQuesAndAnswer getSolveQuiz(Long quizId, List<String> answers) {
         return quizWithQuesDao.getSolveQuiz(quizId, answers);
     }
 }

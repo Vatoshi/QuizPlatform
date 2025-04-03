@@ -1,8 +1,6 @@
 package kg.attractor.quizplatform.dao;
 
 
-import kg.attractor.quizplatform.dto.UserDto;
-import kg.attractor.quizplatform.exeptions.EmailExist;
 import kg.attractor.quizplatform.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;

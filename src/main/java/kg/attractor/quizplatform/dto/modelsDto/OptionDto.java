@@ -1,4 +1,4 @@
-package kg.attractor.quizplatform.dto;
+package kg.attractor.quizplatform.dto.modelsDto;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;

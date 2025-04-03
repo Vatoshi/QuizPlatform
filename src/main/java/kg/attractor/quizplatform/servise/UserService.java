@@ -1,7 +1,7 @@
 package kg.attractor.quizplatform.servise;
 
 import kg.attractor.quizplatform.dao.UserDao;
-import kg.attractor.quizplatform.dto.UserDto;
+import kg.attractor.quizplatform.dto.modelsDto.UserDto;
 import kg.attractor.quizplatform.exeptions.EmailExist;
 import kg.attractor.quizplatform.model.User;
 import lombok.RequiredArgsConstructor;

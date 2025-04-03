@@ -1,10 +1,9 @@
 package kg.attractor.quizplatform.controler;
 
 import jakarta.validation.Valid;
-import kg.attractor.quizplatform.dto.UserDto;
+import kg.attractor.quizplatform.dto.modelsDto.UserDto;
 import kg.attractor.quizplatform.servise.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

@@ -1,4 +1,4 @@
-package kg.attractor.quizplatform.dto;
+package kg.attractor.quizplatform.dto.groupedDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class QuizWithQuesDto {
-    private String question;
-    List<OptionsDto> answers;
+@Builder
+public class HeaderWithQuesAndAnswer {
+    private String mark;
+    private List<QuesAndAnswerDto> quesAndAnswerDtos;
 }

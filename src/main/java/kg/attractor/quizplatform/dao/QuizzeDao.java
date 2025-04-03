@@ -1,10 +1,12 @@
 package kg.attractor.quizplatform.dao;
 
-import kg.attractor.quizplatform.dto.*;
+import kg.attractor.quizplatform.dto.groupedDto.GetAllQuizDto;
+import kg.attractor.quizplatform.dto.modelsDto.OptionDto;
+import kg.attractor.quizplatform.dto.modelsDto.QuestionDto;
+import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;

@@ -1,4 +1,4 @@
-package kg.attractor.quizplatform.dto;
+package kg.attractor.quizplatform.dto.groupedDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

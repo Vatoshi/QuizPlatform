@@ -1,4 +1,4 @@
-package kg.attractor.quizplatform.dto;
+package kg.attractor.quizplatform.dto.modelsDto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

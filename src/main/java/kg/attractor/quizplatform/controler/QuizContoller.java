@@ -1,7 +1,11 @@
 package kg.attractor.quizplatform.controler;
 
 import jakarta.validation.Valid;
-import kg.attractor.quizplatform.dto.*;
+import kg.attractor.quizplatform.dto.groupedDto.GetAllQuizDto;
+import kg.attractor.quizplatform.dto.groupedDto.HeaderWithQuesAndAnswer;
+import kg.attractor.quizplatform.dto.groupedDto.HeaderWithQuiz;
+import kg.attractor.quizplatform.dto.groupedDto.QuesAndAnswerDto;
+import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.servise.QuizzeServise;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,7 +48,7 @@ public class QuizContoller {
     }
 
     @PostMapping("quizzes/{quizId}/solve")
-    public ResponseEntity<List<QuesAndAnswerDto>> getSolveQuiz(@PathVariable Long quizId, @RequestBody List<String> answers) {
+    public ResponseEntity<HeaderWithQuesAndAnswer> getSolveQuiz(@PathVariable Long quizId, @RequestBody List<String> answers) {
         return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getSolveQuiz(quizId, answers));
     }
 }
