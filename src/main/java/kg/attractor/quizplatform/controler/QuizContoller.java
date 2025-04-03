@@ -72,4 +72,5 @@ public class QuizContoller {
     public ResponseEntity<List<LeaderBoardDto>> getLeaderboard(@PathVariable Long quizId) {
         return ResponseEntity.status(HttpStatus.OK).body(quizzeService.GetRating(quizId));
     }
+
 }

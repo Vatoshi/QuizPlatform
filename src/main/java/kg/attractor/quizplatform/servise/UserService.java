@@ -1,6 +1,8 @@
 package kg.attractor.quizplatform.servise;
 
 import kg.attractor.quizplatform.dao.UserDao;
+import kg.attractor.quizplatform.dao.UserStatisticDao;
+import kg.attractor.quizplatform.dto.groupedDto.UserStatistic;
 import kg.attractor.quizplatform.dto.modelsDto.UserDto;
 import kg.attractor.quizplatform.exeptions.EmailExist;
 import kg.attractor.quizplatform.model.User;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserDao userDao;
+    private final UserStatisticDao userStatisticDao;
 
     public UserDto createUser(UserDto userDto) {
         if (userDto.getEmail().equals(userDao.getEmailExist(userDto.getEmail()))) {
@@ -28,4 +31,12 @@ public class UserService {
         return userDto;
     }
 
+    public UserStatistic getUserStat(String username) {
+        Long userId = userStatisticDao.UserId(username);
+        Integer passedQuiz = userStatisticDao.CountAllPassedQuizzes(userId);
+        Double averageScore = userStatisticDao.AverageScore(userId);
+        String name = userStatisticDao.getName(userId);
+        UserStatistic userStatistic = new UserStatistic(name,passedQuiz,averageScore);
+        return userStatistic;
+    }
 }
