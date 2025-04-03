@@ -51,6 +51,16 @@ public class QuizResultsDao {
         }
     }
 
+    public Integer getQuizResultsId (Long userId, Long quizId) {
+        String sql = "select id from quiz_results where user_id = ? and quiz_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, userId, quizId);
+        } catch (Exception e) {
+            throw new NotFound("Нельзя поставить оценку без прохождения");
+        }
+
+    }
+
     public void SetRating(Long resultId, ScoreDto score) {
         String sql = "update quiz_results set rating_from_user = ? where id = ?";
         jdbcTemplate.update(sql, score.getScore(), resultId);

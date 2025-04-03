@@ -105,7 +105,7 @@ public class QuizzeServise {
     public ScoreDto SetScore (String username, Long quizId, ScoreDto score) {
         Long userId = quizzeDao.UserId(username);
         try {
-            Long resultsId = Long.valueOf(quizResultsDao.getQuizResult(userId, quizId));
+            Long resultsId = Long.valueOf(quizResultsDao.getQuizResultsId(userId, quizId));
             quizResultsDao.SetRating(resultsId, score);
             return score;
         } catch (Exception e) {
