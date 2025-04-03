@@ -3,11 +3,12 @@ package kg.attractor.quizplatform.dao;
 import kg.attractor.quizplatform.dto.groupedDto.ScoreDto;
 import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -64,5 +65,19 @@ public class QuizResultsDao {
     public void SetRating(Long resultId, ScoreDto score) {
         String sql = "update quiz_results set rating_from_user = ? where id = ?";
         jdbcTemplate.update(sql, score.getScore(), resultId);
+    }
+
+    public List<Map<String, Object>> getUsers(Long quizId) {
+        String sql = "select user_id, score from quiz_results where quiz_id = ?";
+        List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql, quizId);
+
+        for (Map<String, Object> row : rows) {
+            String sql1 = "select username from users where id = ?";
+            String name = jdbcTemplate.queryForObject(sql1, String.class, row.get("user_id"));
+
+            row.remove("user_id");
+            row.put("username", name);
+        }
+        return rows;
     }
 }

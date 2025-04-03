@@ -12,7 +12,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -104,6 +107,8 @@ public class QuizzeServise {
 
     public ScoreDto SetScore (String username, Long quizId, ScoreDto score) {
         Long userId = quizzeDao.UserId(username);
+        Integer rating = quizResultsDao.getRating(userId, quizId);
+        if (rating != null) {throw new IllegalArgumentException("Вы уже поставили оценку");}
         try {
             Long resultsId = Long.valueOf(quizResultsDao.getQuizResultsId(userId, quizId));
             quizResultsDao.SetRating(resultsId, score);
@@ -112,4 +117,20 @@ public class QuizzeServise {
             throw new NotFound("Нельзя дать оценку без прохождения");
         }
     }
+
+    public List<LeaderBoardDto> GetRating(Long quizId) {
+        List<Map<String, Object>> users = quizResultsDao.getUsers(quizId);
+        List<LeaderBoardDto> ratings = new ArrayList<>();
+        for (Map<String, Object> row : users) {
+            String username = (String) row.get("username");
+            Double score = (Double) row.get("score");
+
+            ratings.add(new LeaderBoardDto(username, score));
+        }
+        ratings = ratings.stream()
+                .sorted(Comparator.comparing(LeaderBoardDto::getScore, Comparator.reverseOrder()))
+                .collect(Collectors.toList());
+        return ratings;
+    }
+
 }

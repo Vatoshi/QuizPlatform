@@ -1,8 +1,6 @@
 package kg.attractor.quizplatform.controler;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import kg.attractor.quizplatform.dto.groupedDto.*;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.servise.QuizzeServise;
@@ -70,4 +68,8 @@ public class QuizContoller {
         return ResponseEntity.status(HttpStatus.OK).body("Вы поставили оценку " + score.getScore() + ", квизу " + quizId);
     }
 
+    @GetMapping("quizzes/{quizId}/leaderboard")
+    public ResponseEntity<List<LeaderBoardDto>> getLeaderboard(@PathVariable Long quizId) {
+        return ResponseEntity.status(HttpStatus.OK).body(quizzeService.GetRating(quizId));
+    }
 }
