@@ -4,6 +4,7 @@ import kg.attractor.quizplatform.dto.groupedDto.HeaderWithQuesAndAnswer;
 import kg.attractor.quizplatform.dto.modelsDto.OptionsDto;
 import kg.attractor.quizplatform.dto.groupedDto.QuesAndAnswerDto;
 import kg.attractor.quizplatform.dto.groupedDto.QuizWithQuesDto;
+import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,11 @@ public class QuizWithQuesDao {
 
     public String getTitle(Long quizId) {
         String sql = "select title from quizzes where id = ?";
-        return jdbcTemplate.queryForObject(sql, String.class, quizId);
+        try {
+            return jdbcTemplate.queryForObject(sql, String.class, quizId);
+        } catch (Exception e) {
+            throw new NotFound("quiz not found");
+        }
     }
 }
 

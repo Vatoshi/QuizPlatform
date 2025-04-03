@@ -31,7 +31,8 @@ public class UserStatisticDao {
     public Double AverageScore(Long userId) {
         String sql = "select score from quiz_results where user_id = ?";
         List<Integer> scores = jdbcTemplate.queryForList(sql,Integer.class,userId);
-        return scores.stream().mapToDouble(Integer::doubleValue).sum()/scores.size();
+        Double average = scores.stream().mapToDouble(Integer::doubleValue).sum()/scores.size();
+        return Math.round(average * 100.0) / 100.0;
     }
 
     public String getName(Long userId) {

@@ -52,7 +52,7 @@ public class QuizzeServise {
         List<QuesAndAnswerDto> solves = new ArrayList<>();
         String mark = "";
         int count = questions.size() - answers.size();
-        if (count < 0 ) {throw new IllegalArgumentException("количество ответов больше чем вопросы");}
+        if (count < 0 ) {throw new IllegalArgumentException("количество ответов больше чем вопросы либо квиза не существует");}
         if (count == 0) {
             mark = "вы ответили на все вопросы";
         } else {
@@ -77,7 +77,7 @@ public class QuizzeServise {
         if (i == null) {
             quizResults(header, userId, quizId);
         } else {
-            throw new IllegalArgumentException("Возможно вы езе не проходили данный квиз");
+            throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
         }
         return header;
     }

@@ -54,9 +54,7 @@ public class UserService {
             UserStatistic curentUser = new UserStatistic(name,passedQuiz,averageScore);
             userStatistics.add(curentUser);
         }
-
-//        userStatistics.sort((user1, user2) -> user2.getQuizPassedCount().compareTo(user1.getQuizPassedCount()));
-//        userStatistics.sort((user1, user2) -> user2.getAverageScore().compareTo(user1.getAverageScore()));
+        userStatistics.sort((user1, user2) -> user2.getAverageScore().compareTo(user1.getAverageScore()));
         return userStatistics;
     }
 }
