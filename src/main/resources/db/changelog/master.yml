@@ -15,3 +15,5 @@ databaseChangeLog:
       file: db/changelog/initial/007fk-role.yml
   - include:
       file: db/changelog/initial/008_add-user.yml
+  - include:
+      file: db/changelog/initial/009_addScoreFromUserToQuiz.yml

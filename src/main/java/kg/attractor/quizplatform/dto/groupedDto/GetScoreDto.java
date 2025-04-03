@@ -15,4 +15,5 @@ public class GetScoreDto {
     private Integer yourCorrectAnswerCount;
     private Integer totalAnswers;
     private Integer score;
+    private Integer ratingFromUser;
 }

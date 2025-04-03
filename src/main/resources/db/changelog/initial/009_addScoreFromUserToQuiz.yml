@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: add_score_column_to_quiz_results
+      author: eric
+      changes:
+        - addColumn:
+            tableName: quiz_results
+            columns:
+              - column:
+                  name: rating_from_user
+                  type: bigint
+
+

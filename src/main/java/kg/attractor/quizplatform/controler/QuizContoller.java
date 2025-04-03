@@ -1,6 +1,8 @@
 package kg.attractor.quizplatform.controler;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import kg.attractor.quizplatform.dto.groupedDto.*;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.servise.QuizzeServise;
@@ -58,4 +60,14 @@ public class QuizContoller {
         String username = authentication.getName();
         return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getQuizResults(quizId, username));
     }
+
+    //просто отправить integer не получается
+    @PostMapping("/quizzes/{quizId}/rate")
+    public ResponseEntity<String> setQuizRating(@RequestBody @Valid ScoreDto score, @PathVariable Long quizId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+            quizzeService.SetScore(username, quizId, score);
+        return ResponseEntity.status(HttpStatus.OK).body("Вы поставили оценку " + score.getScore() + ", квизу " + quizId);
+    }
+
 }

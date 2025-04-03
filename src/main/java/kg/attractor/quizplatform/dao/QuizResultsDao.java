@@ -1,5 +1,6 @@
 package kg.attractor.quizplatform.dao;
 
+import kg.attractor.quizplatform.dto.groupedDto.ScoreDto;
 import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -41,19 +42,17 @@ public class QuizResultsDao {
         return jdbcTemplate.queryForList(sql, Long.class, quizId);
     }
 
-    public String correctAnswer (Long ques_id) {
-        String sql = "select option_text from options where question_id = ? and is_correct = true";
-        return jdbcTemplate.queryForObject(sql, String.class, ques_id);
+    public Integer getRating (Long userId, Long quizId) {
+        String sql = "select rating_from_user from quiz_results where user_id = ? and quiz_id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, userId, quizId);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public Integer getScore(Long userId, Long quizId) {
-        String sql = "select score from quiz_results where user_id = ? and quiz_id = ?";
-        return jdbcTemplate.queryForObject(sql, Integer.class, userId, quizId);
+    public void SetRating(Long resultId, ScoreDto score) {
+        String sql = "update quiz_results set rating_from_user = ? where id = ?";
+        jdbcTemplate.update(sql, score.getScore(), resultId);
     }
-
-    public List<Integer> getQuestionsCount(Long quizId) {
-        String sql = "select id from questions where quiz_id = ?";
-        return jdbcTemplate.queryForList(sql, Integer.class, quizId);
-    }
-
 }

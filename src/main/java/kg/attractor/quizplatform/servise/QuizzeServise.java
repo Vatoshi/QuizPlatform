@@ -97,7 +97,19 @@ public class QuizzeServise {
         Integer answerscount = questionIds.size();
         Integer score = quizResultsDao.getQuizResult(userId, quizId);
         Integer correctAnswersCount = score / 10;
-        GetScoreDto getScore = new GetScoreDto(correctAnswersCount, answerscount,score);
+        Integer rating = quizResultsDao.getRating(userId, quizId);
+        GetScoreDto getScore = new GetScoreDto(correctAnswersCount, answerscount,score,rating);
         return getScore;
+    }
+
+    public ScoreDto SetScore (String username, Long quizId, ScoreDto score) {
+        Long userId = quizzeDao.UserId(username);
+        try {
+            Long resultsId = Long.valueOf(quizResultsDao.getQuizResult(userId, quizId));
+            quizResultsDao.SetRating(resultsId, score);
+            return score;
+        } catch (Exception e) {
+            throw new NotFound("Нельзя дать оценку без прохождения");
+        }
     }
 }
