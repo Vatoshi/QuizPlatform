@@ -1,10 +1,7 @@
 package kg.attractor.quizplatform.controler;
 
 import jakarta.validation.Valid;
-import kg.attractor.quizplatform.dto.groupedDto.GetAllQuizDto;
-import kg.attractor.quizplatform.dto.groupedDto.HeaderWithQuesAndAnswer;
-import kg.attractor.quizplatform.dto.groupedDto.HeaderWithQuiz;
-import kg.attractor.quizplatform.dto.groupedDto.QuesAndAnswerDto;
+import kg.attractor.quizplatform.dto.groupedDto.*;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.servise.QuizzeServise;
 import lombok.RequiredArgsConstructor;
@@ -55,9 +52,10 @@ public class QuizContoller {
         return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getSolveQuiz(quizId, answers, username));
     }
 
-//    @GetMapping("quizzes/{quizId}/results")
-//    public ResponseEntity<HeaderWithQuesAndAnswer> getResults(@PathVariable Long quizId) {
-//
-//        quizzeService.getQuizToAnswer(quizId);
-//    }
+    @GetMapping("quizzes/{quizId}/results")
+    public ResponseEntity<GetScoreDto> getResults(@PathVariable Long quizId) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getQuizResults(quizId, username));
+    }
 }

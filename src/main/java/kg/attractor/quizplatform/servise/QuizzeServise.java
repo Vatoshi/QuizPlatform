@@ -6,6 +6,7 @@ import kg.attractor.quizplatform.dao.QuizzeDao;
 import kg.attractor.quizplatform.dto.groupedDto.*;
 import kg.attractor.quizplatform.dto.modelsDto.OptionsDto;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
+import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -73,7 +74,7 @@ public class QuizzeServise {
         if (i == null) {
             quizResults(header, userId, quizId);
         } else {
-            throw new IllegalArgumentException("Вы уже проходили данный квиз");
+            throw new IllegalArgumentException("Возможно вы езе не проходили данный квиз");
         }
         return header;
     }
@@ -86,5 +87,17 @@ public class QuizzeServise {
             }
         }
         quizResultsDao.SetQuizResult(userId, quizId, score);
+    }
+
+    public GetScoreDto getQuizResults (Long quizId, String username) {
+        Long userId = quizzeDao.UserId(username);
+
+        Long getIdResults = quizResultsDao.getQuizResultInteger(quizId, userId);
+        List<Long> questionIds = quizResultsDao.questionId(getIdResults);
+        Integer answerscount = questionIds.size();
+        Integer score = quizResultsDao.getQuizResult(userId, quizId);
+        Integer correctAnswersCount = score / 10;
+        GetScoreDto getScore = new GetScoreDto(correctAnswersCount, answerscount,score);
+        return getScore;
     }
 }
