@@ -47,8 +47,11 @@ public class QuizContoller {
         return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getQuizToAnswer(quizId));
     }
 
+    //отправить ответы на данный по айди квиз
     @PostMapping("quizzes/{quizId}/solve")
     public ResponseEntity<HeaderWithQuesAndAnswer> getSolveQuiz(@PathVariable Long quizId, @RequestBody List<String> answers) {
         return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getSolveQuiz(quizId, answers));
     }
+
+//    @GetMapping("quizzes/{quizId}/")
 }

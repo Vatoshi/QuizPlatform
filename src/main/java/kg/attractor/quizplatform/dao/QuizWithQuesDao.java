@@ -36,34 +36,5 @@ public class QuizWithQuesDao {
         String sql = "select title from quizzes where id = ?";
         return jdbcTemplate.queryForObject(sql, String.class, quizId);
     }
-
-    public HeaderWithQuesAndAnswer getSolveQuiz(Long quizId, List<String> answers) {
-        String mark = "";
-        List<QuizWithQuesDto> questions = getQuizToAnswer(quizId);
-        List<QuesAndAnswerDto> solves = new ArrayList<>();
-        for (int i = 0; i < answers.size(); i++) {
-            String ques = questions.get(i).getQuestion();
-            String correctOption = questions.get(i).getAnswers().stream()
-                    .filter(OptionsDto::getIsCorrect)
-                    .map(OptionsDto::getOption)
-                    .findFirst()
-                    .orElse(null);
-            QuesAndAnswerDto opa = new QuesAndAnswerDto(ques,correctOption,answers.get(i));
-            solves.add(opa);
-        }
-        int count = questions.size() - answers.size();
-        if (count == 0) {
-            mark = "вы ответили на все вопросы";
-        } else {
-            mark = "вы не ответили на " + count + " количество вопросов (автоматически засчитываются за неправильный ответ)";
-        }
-        HeaderWithQuesAndAnswer header = new HeaderWithQuesAndAnswer(mark,solves);
-        return header;
-    }
-
-    private Long getQuesId (String question) {
-        String sql = "select id from questions where question_text = ?";
-        return jdbcTemplate.queryForObject(sql, Long.class, question);
-    }
 }
 
