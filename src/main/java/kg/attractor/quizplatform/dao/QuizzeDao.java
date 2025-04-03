@@ -83,14 +83,14 @@ public class QuizzeDao {
                     + "where qu.title = ?";
             List<Map<String, Object>> questionList = jdbcTemplate.queryForList(sql, quizName);
             int sum = questionList.size();
-            Long id = quiqId(quizName);
+            Long id = quizId(quizName);
             getAllQuizDtos.add(new GetAllQuizDto(id,quizName,sum));
         }
         return getAllQuizDtos;
     }
 
 
-    private Long quiqId(String name) {
+    public Long quizId(String name) {
         String sql = "select id from quizzes where title = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, name);
     }

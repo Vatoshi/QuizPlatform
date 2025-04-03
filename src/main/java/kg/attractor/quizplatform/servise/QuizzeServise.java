@@ -1,5 +1,6 @@
 package kg.attractor.quizplatform.servise;
 
+import kg.attractor.quizplatform.dao.QuizResultsDao;
 import kg.attractor.quizplatform.dao.QuizWithQuesDao;
 import kg.attractor.quizplatform.dao.QuizzeDao;
 import kg.attractor.quizplatform.dto.groupedDto.*;
@@ -18,6 +19,7 @@ import java.util.List;
 public class QuizzeServise {
     private final QuizzeDao quizzeDao;
     private final QuizWithQuesDao quizWithQuesDao;
+    private final QuizResultsDao quizResultsDao;
 
     public QuizzeDto createQuizze(QuizzeDto quizzeDto, String username) {
         if (quizzeDto.getTitle().equals(quizzeDao.getQuizTitle(quizzeDto.getTitle()))) {
@@ -41,7 +43,7 @@ public class QuizzeServise {
         return headerWithQuiz;
     }
 
-    public HeaderWithQuesAndAnswer getSolveQuiz(Long quizId, List<String> answers) {
+    public HeaderWithQuesAndAnswer getSolveQuiz(Long quizId, List<String> answers, String username) {
         List<QuizWithQuesDto> questions = quizWithQuesDao.getQuizToAnswer(quizId);
         List<QuesAndAnswerDto> solves = new ArrayList<>();
         String mark = "";
@@ -51,8 +53,11 @@ public class QuizzeServise {
             mark = "вы ответили на все вопросы";
         } else {
             mark = "вы не ответили на " + count + " количество вопросов (автоматически засчитываются за неправильный ответ)";
+            while (answers.size() < questions.size()) {
+                answers.add("");
+            }
         }
-        for (int i = 0; i < answers.size(); i++) {
+        for (int i = 0; i < questions.size(); i++) {
             String ques = questions.get(i).getQuestion();
             String correctOption = questions.get(i).getAnswers().stream()
                     .filter(OptionsDto::getIsCorrect)
@@ -63,6 +68,23 @@ public class QuizzeServise {
             solves.add(opa);
         }
         HeaderWithQuesAndAnswer header = new HeaderWithQuesAndAnswer(mark,solves);
+        Long userId = quizzeDao.UserId(username);
+        Integer i = quizResultsDao.getQuizResult(userId, quizId);
+        if (i == null) {
+            quizResults(header, userId, quizId);
+        } else {
+            throw new IllegalArgumentException("Вы уже проходили данный квиз");
+        }
         return header;
+    }
+
+    private void quizResults (HeaderWithQuesAndAnswer headerWithQuesAndAnswer, Long userId, Long quizId) {
+        Integer score = 0;
+        for (QuesAndAnswerDto i : headerWithQuesAndAnswer.getQuesAndAnswerDtos()) {
+            if (i.getCorrectAnswer().equals(i.getYourAnswer())) {
+                score = score + 10;
+            }
+        }
+        quizResultsDao.SetQuizResult(userId, quizId, score);
     }
 }

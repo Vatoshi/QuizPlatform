@@ -50,8 +50,14 @@ public class QuizContoller {
     //отправить ответы на данный по айди квиз
     @PostMapping("quizzes/{quizId}/solve")
     public ResponseEntity<HeaderWithQuesAndAnswer> getSolveQuiz(@PathVariable Long quizId, @RequestBody List<String> answers) {
-        return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getSolveQuiz(quizId, answers));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getSolveQuiz(quizId, answers, username));
     }
 
-//    @GetMapping("quizzes/{quizId}/")
+//    @GetMapping("quizzes/{quizId}/results")
+//    public ResponseEntity<HeaderWithQuesAndAnswer> getResults(@PathVariable Long quizId) {
+//
+//        quizzeService.getQuizToAnswer(quizId);
+//    }
 }
