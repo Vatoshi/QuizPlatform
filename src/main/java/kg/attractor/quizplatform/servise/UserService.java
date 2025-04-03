@@ -9,6 +9,9 @@ import kg.attractor.quizplatform.model.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
@@ -38,5 +41,21 @@ public class UserService {
         String name = userStatisticDao.getName(userId);
         UserStatistic userStatistic = new UserStatistic(name,passedQuiz,averageScore);
         return userStatistic;
+    }
+
+    public List<UserStatistic> getUserStatisticsLeaderboard() {
+        List<UserStatistic> userStatistics = new ArrayList<>();
+        List<Long> usersId = userStatisticDao.getUsersId();
+        for (Long userId : usersId) {
+            String name = userStatisticDao.getName(userId);
+            Double averageScore = userStatisticDao.AverageScore(userId);
+            Integer passedQuiz = userStatisticDao.CountAllPassedQuizzes(userId);
+            UserStatistic curentUser = new UserStatistic(name,passedQuiz,averageScore);
+            userStatistics.add(curentUser);
+        }
+
+//        userStatistics.sort((user1, user2) -> user2.getQuizPassedCount().compareTo(user1.getQuizPassedCount()));
+//        userStatistics.sort((user1, user2) -> user2.getAverageScore().compareTo(user1.getAverageScore()));
+        return userStatistics;
     }
 }

@@ -11,6 +11,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/user")
@@ -28,5 +30,10 @@ public class UserController {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         return ResponseEntity.status(HttpStatus.OK).body(userService.getUserStat(username));
+    }
+
+    @GetMapping("/global-statistics")
+    public ResponseEntity<List<UserStatistic>> getGlobalStatistics() {
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserStatisticsLeaderboard());
     }
 }

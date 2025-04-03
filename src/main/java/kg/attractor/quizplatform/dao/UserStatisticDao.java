@@ -38,4 +38,15 @@ public class UserStatisticDao {
         String sql = "select username from users where id = ?";
         return jdbcTemplate.queryForObject(sql,String.class,userId);
     }
+
+    public List<Long> getUsersId() {
+        String sql = "select id from users";
+        return jdbcTemplate.queryForList(sql, Long.class);
+    }
+
+    public Integer getALlQuesId(Long userId) {
+        String sql = "select id from quiz_results where quiz_id = ?";
+        List<Integer> ids = jdbcTemplate.queryForList(sql,Integer.class,userId);
+        return ids.size();
+    }
 }
