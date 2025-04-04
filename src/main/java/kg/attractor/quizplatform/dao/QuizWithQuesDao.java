@@ -6,6 +6,8 @@ import kg.attractor.quizplatform.dto.groupedDto.QuesAndAnswerDto;
 import kg.attractor.quizplatform.dto.groupedDto.QuizWithQuesDto;
 import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +17,7 @@ import java.util.List;
 @Component
 @RequiredArgsConstructor
 public class QuizWithQuesDao {
+    private static final Logger log = LoggerFactory.getLogger(QuizWithQuesDao.class);
     private final JdbcTemplate jdbcTemplate;
 
     public List<QuizWithQuesDto> getQuizToAnswer(Long quizId) {
@@ -38,6 +41,7 @@ public class QuizWithQuesDao {
         try {
             return jdbcTemplate.queryForObject(sql, String.class, quizId);
         } catch (Exception e) {
+            log.info("викторина не найдена");
             throw new NotFound("quiz not found");
         }
     }

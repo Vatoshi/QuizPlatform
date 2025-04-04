@@ -3,6 +3,8 @@ package kg.attractor.quizplatform.dao;
 import kg.attractor.quizplatform.dto.groupedDto.ScoreDto;
 import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
@@ -13,6 +15,7 @@ import java.util.Map;
 @Component
 @RequiredArgsConstructor
 public class QuizResultsDao {
+    private static final Logger log = LoggerFactory.getLogger(QuizResultsDao.class);
     private final JdbcTemplate jdbcTemplate;
 
     public void SetQuizResult(Long userId, Long quizId, Integer score) {
@@ -34,6 +37,7 @@ public class QuizResultsDao {
         try {
             return jdbcTemplate.queryForObject(sql, Long.class, userId, quizId);
         } catch (Exception e) {
+            log.info("квиз езе не пройден");
             throw new NotFound("Вы еще не проходили данный квиз");
         }
     }
@@ -57,6 +61,7 @@ public class QuizResultsDao {
         try {
             return jdbcTemplate.queryForObject(sql, Integer.class, userId, quizId);
         } catch (Exception e) {
+            log.info("нельзя дать оценку квизу который езе не пройден");
             throw new NotFound("Нельзя поставить оценку без прохождения");
         }
 

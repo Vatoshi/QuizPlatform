@@ -30,14 +30,17 @@ public class QuizzeServise {
 
     public QuizzeDto createQuizze(QuizzeDto quizzeDto, String username) {
         if (quizzeDto.getTitle().equals(quizzeDao.getQuizTitle(quizzeDto.getTitle()))) {
+            log.info("Quiz with title '{}' already exists", quizzeDto.getTitle());
             throw new IllegalArgumentException("Quiz like your already exists (quiz title is unique)");
         }
         Long userId = quizzeDao.UserId(username);
         quizzeDao.createQuiz(quizzeDto, userId);
+        log.info("Created quiz with title '{}'", quizzeDto.getTitle());
         return quizzeDto;
     }
 
     public List<GetAllQuizDto> getQuizzes() {
+        log.info("Retrieving quizzes");
         return quizzeDao.getAllQuiz();
     }
 
@@ -48,6 +51,7 @@ public class QuizzeServise {
                 "Отправлять ответы поочередно с верху в вниз, АЙДИ данного квиза " + quizId
                 + ". Также не забывайте пройти квиз можно лишь раз",
                 quizWithQuesDao.getQuizToAnswer(quizId));
+        log.info("Retrieved quiz with title '{}'", quizTitle);
         return headerWithQuiz;
     }
 
@@ -56,7 +60,9 @@ public class QuizzeServise {
         List<QuesAndAnswerDto> solves = new ArrayList<>();
         String mark = "";
         int count = questions.size() - answers.size();
-        if (count < 0 ) {throw new IllegalArgumentException("количество ответов больше чем вопросы либо квиза не существует");}
+        if (count < 0 ) {
+            log.info("количество ответов больше чем вопросы либо квиза не существует");
+            throw new IllegalArgumentException("количество ответов больше чем вопросы либо квиза не существует");}
         if (count == 0) {
             mark = "вы ответили на все вопросы";
         } else {
@@ -81,8 +87,10 @@ public class QuizzeServise {
         if (i == null) {
             quizResults(header, userId, quizId);
         } else {
+            log.info("Возможно вы уже прошли данный квиз");
             throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
         }
+        log.info("юзер ответил");
         return header;
     }
 
@@ -106,6 +114,7 @@ public class QuizzeServise {
         Integer correctAnswersCount = score / 10;
         Integer rating = quizResultsDao.getRating(userId, quizId);
         GetScoreDto getScore = new GetScoreDto(correctAnswersCount, answerscount,score,rating);
+        log.info("результаты по '{}'",quizId);
         return getScore;
     }
 
@@ -118,6 +127,7 @@ public class QuizzeServise {
             quizResultsDao.SetRating(resultsId, score);
             return score;
         } catch (Exception e) {
+            log.info("пользователь не прошел данный квиз");
             throw new NotFound("Нельзя дать оценку без прохождения");
         }
     }
@@ -134,6 +144,7 @@ public class QuizzeServise {
         ratings = ratings.stream()
                 .sorted(Comparator.comparing(LeaderBoardDto::getScore, Comparator.reverseOrder()))
                 .collect(Collectors.toList());
+        log.info("лидерборд");
         return ratings;
     }
 
@@ -142,7 +153,7 @@ public class QuizzeServise {
         request.setPage(page);
         request.setLimit(limit);
         request.setCategory(category);
-
+        log.info("отправка викторин");
         return quizzeDao.getAll(request);
     }
 }
