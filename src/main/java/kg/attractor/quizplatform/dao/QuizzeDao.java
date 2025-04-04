@@ -53,7 +53,6 @@ public class QuizzeDao {
 
     }
 
-    // при ошибке счетчика truecount предыдущие операции сохраняются в базе
     @Transactional
     public void createQuiz(QuizzeDto quizzeDto, Long userId) {
         Long categoryId = getCategoryId(quizzeDto.getCategory());

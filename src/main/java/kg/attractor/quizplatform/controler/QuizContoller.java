@@ -52,7 +52,6 @@ public class QuizContoller {
         );
     }
 
-    //получение квиза с варинатами ответа без ответа
     @GetMapping("quizzes/{quizId}")
     public ResponseEntity<HeaderWithQuiz> getQuiz(@PathVariable Long quizId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -60,7 +59,7 @@ public class QuizContoller {
         return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getQuizToAnswer(quizId,username));
     }
 
-    //отправить ответы на данный по айди квиз
+
     @PostMapping("quizzes/{quizId}/solve")
     public ResponseEntity<HeaderWithQuesAndAnswer> getSolveQuiz(@PathVariable Long quizId, @RequestBody List<String> answers) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -75,7 +74,7 @@ public class QuizContoller {
         return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getQuizResults(quizId, username));
     }
 
-    //просто отправить integer не получается
+
     @PostMapping("/quizzes/{quizId}/rate")
     public ResponseEntity<String> setQuizRating(@RequestBody @Valid ScoreDto score, @PathVariable Long quizId) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
