@@ -40,12 +40,13 @@ public class QuizContoller {
         return ResponseEntity.status(HttpStatus.FOUND).body(quizzeService.getQuizzes());
     }
 
-    @GetMapping("quizzespag")
+    @GetMapping("quizzes/")
     public ResponseEntity<List<QuizDto>> getAllQuiz(
             @RequestParam(value = "page") Integer page,
-            @RequestParam(value = "limit") Integer limit,
+            @RequestParam(value = "limit", required = false) Integer limit,
             @RequestParam(value = "category",required = false) String category
     ) {
+        if (limit == null || limit < 1 ){limit = 3;}
         return ResponseEntity.ok(
                 quizzeService.getQuizzes(page, limit, category)
         );

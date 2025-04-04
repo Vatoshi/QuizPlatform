@@ -120,17 +120,10 @@ public class QuizzeDao {
     }
 
     public List<QuizDto> getAll(PaginationParam param) {
-        if (param.getPage() == null || param.getPage() < 1) {
-            param.setPage(1);
-        }
-        if (param.getLimit() == null || param.getLimit() < 1) {
-            param.setLimit(5);
-        }
         int offset = (param.getPage() - 1) * param.getLimit();
 
         if (param.getCategory() != null) {
             Long categoryId = getCategoryId(param.getCategory());
-
             String sql = "select id, title, description, category_id from quizzes " +
                     "where category_id = ? order by id limit ? offset ?";
 
