@@ -53,7 +53,7 @@ public class SecurityConfig {
                 .httpBasic(Customizer.withDefaults())
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/quiz").permitAll()
-                        .requestMatchers("/quiz/**","/user/{userId}/statistics").hasAnyAuthority("USER")
+                        .requestMatchers("/quiz/**","/user/{userId}/statistics","/user/global-statistics").hasAnyAuthority("USER")
                         .anyRequest().permitAll());
 
         return http.build();
