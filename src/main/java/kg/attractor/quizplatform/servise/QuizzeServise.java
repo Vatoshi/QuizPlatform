@@ -14,6 +14,11 @@ import lombok.extern.slf4j.Slf4j;
 //import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -44,14 +49,18 @@ public class QuizzeServise {
         return quizzeDao.getAllQuiz();
     }
 
-    public HeaderWithQuiz getQuizToAnswer(Long quizId) {
+    public HeaderWithQuiz getQuizToAnswer(Long quizId, String username) {
+        Long userId = quizzeDao.UserId(username);
+        Integer timeLimit = quizzeDao.getTimeLimit(quizId);
         String quizTitle = quizWithQuesDao.getTitle(quizId);
         String category = quizzeDao.getCategory(quizId);
-        HeaderWithQuiz headerWithQuiz = new HeaderWithQuiz(quizTitle, category,
+        HeaderWithQuiz headerWithQuiz = new HeaderWithQuiz(quizTitle, category, timeLimit,
                 "Отправлять ответы поочередно с верху в вниз, АЙДИ данного квиза " + quizId
                 + ". Также не забывайте пройти квиз можно лишь раз",
                 quizWithQuesDao.getQuizToAnswer(quizId));
         log.info("Retrieved quiz with title '{}'", quizTitle);
+        quizzeDao.deleteTime(quizId, userId);
+        quizzeDao.createTimeToAnswer(quizId,userId);
         return headerWithQuiz;
     }
 
@@ -81,21 +90,58 @@ public class QuizzeServise {
             QuesAndAnswerDto opa = new QuesAndAnswerDto(ques,correctOption,answers.get(i));
             solves.add(opa);
         }
-        HeaderWithQuesAndAnswer header = new HeaderWithQuesAndAnswer(mark,solves);
+        HeaderWithQuesAndAnswer header = new HeaderWithQuesAndAnswer(mark,solves, LocalDateTime.now());
         Long userId = quizzeDao.UserId(username);
         Integer i = quizResultsDao.getQuizResult(userId, quizId);
-        if (i == null) {
-            quizResults(header, userId, quizId);
+        Long minute = quizzeDao.getTime(quizId);
+        System.out.println(minute);
+        if (minute == null) {
+            if (i == null) {
+                quizResults(header, userId, quizId);
+            } else {
+                log.info("Возможно вы уже прошли данный квиз");
+                throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
+            }
         } else {
-            log.info("Возможно вы уже прошли данный квиз");
-            throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
+                Time nowTime = Time.valueOf(LocalTime.now());
+                Time startsTime = quizzeDao.getStartsTime(quizId, userId);
+                LocalTime nowTimeL = nowTime.toLocalTime();
+                LocalTime startsTimeL = startsTime.toLocalTime();
+                long minutesBetween = ChronoUnit.MINUTES.between(startsTimeL, nowTimeL);
+                if (minutesBetween > minute) {
+                    if (i == null) {
+                        log.info("пользователь не успел по времени");
+                        quizResults(header, userId, quizId);
+                    } else {
+                        log.info("Возможно вы уже прошли данный квиз");
+                        throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
+                    }
+                } else {
+                    if (i == null) {
+                        quizResultsTime(header, userId, quizId);
+                    } else {
+                        log.info("Возможно вы уже прошли данный квиз");
+                        throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
+                    }
+                }
         }
+        quizzeDao.deleteTime(quizId, userId);
         log.info("юзер ответил");
         return header;
     }
 
     private void quizResults (HeaderWithQuesAndAnswer headerWithQuesAndAnswer, Long userId, Long quizId) {
         Integer score = 0;
+        for (QuesAndAnswerDto i : headerWithQuesAndAnswer.getQuesAndAnswerDtos()) {
+            if (i.getCorrectAnswer().equals(i.getYourAnswer())) {
+                score = score + 10;
+            }
+        }
+        quizResultsDao.SetQuizResult(userId, quizId, score);
+    }
+
+    private void quizResultsTime (HeaderWithQuesAndAnswer headerWithQuesAndAnswer, Long userId, Long quizId) {
+        Integer score = -50;
         for (QuesAndAnswerDto i : headerWithQuesAndAnswer.getQuesAndAnswerDtos()) {
             if (i.getCorrectAnswer().equals(i.getYourAnswer())) {
                 score = score + 10;

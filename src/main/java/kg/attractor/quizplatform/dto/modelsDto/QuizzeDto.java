@@ -1,6 +1,7 @@
 package kg.attractor.quizplatform.dto.modelsDto;
 
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -14,6 +15,9 @@ public class QuizzeDto {
     private String title;
     @NotNull(message = "веддите существующую категорию")
     private String category;
+    @NotNull(message = "укажите время прохождения в минутах")
+    @Min(value = 1)
+    private Integer timeLimit;
     @NotNull
     @Size(min = 3, max = 100, message = "описание должно содержать минимум 3 символа")
     private String description;

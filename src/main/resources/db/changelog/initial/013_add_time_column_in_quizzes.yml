@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      author: ericahhaa
+      id: create time param
+      changes:
+        - addColumn:
+            tableName: quizzes
+            columns:
+              - column:
+                  name: minute_time
+                  type: bigint

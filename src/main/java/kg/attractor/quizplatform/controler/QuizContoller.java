@@ -55,7 +55,9 @@ public class QuizContoller {
     //получение квиза с варинатами ответа без ответа
     @GetMapping("quizzes/{quizId}")
     public ResponseEntity<HeaderWithQuiz> getQuiz(@PathVariable Long quizId) {
-        return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getQuizToAnswer(quizId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return ResponseEntity.status(HttpStatus.OK).body(quizzeService.getQuizToAnswer(quizId,username));
     }
 
     //отправить ответы на данный по айди квиз

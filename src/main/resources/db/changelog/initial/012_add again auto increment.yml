@@ -20,3 +20,13 @@ databaseChangeLog:
             columnDataType: bigint
             startWith: 46
             incrementBy: 1
+  - changeSet:
+      author: eric
+      id: auto increment_results
+      changes:
+        - addAutoIncrement:
+            columnName: id
+            tableName: quiz_results
+            columnDataType: bigint
+            startWith: 6
+            incrementBy: 1

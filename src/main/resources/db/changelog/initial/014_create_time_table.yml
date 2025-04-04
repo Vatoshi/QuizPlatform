@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      author: eric
+      id: create_time_table
+      changes:
+        - createTable:
+            tableName: time_to
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quiz_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+              - column:
+                  name: starts
+                  type: time
+                  defaultValueComputed: now()
+
+  - changeSet:
+      author: eric
+      id: add_fk_user_id
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: time_to
+            baseColumnNames: user_id
+            constraintName: fk_user_id_for_time
+            referencedTableName: users
+            referencedColumnNames: id
+
+  - changeSet:
+      author: eric
+      id: add_fk_quiz_id
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: time_to
+            baseColumnNames: quiz_id
+            constraintName: fk_quiz_id_for_time
+            referencedTableName: quizzes
+            referencedColumnNames: id

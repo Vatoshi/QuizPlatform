@@ -8,7 +8,7 @@ spring:
     driver-class-name: org.h2.Driver
   liquibase:
     change-log: classpath:/db/changelog/master.yml
-#    drop-first: true
+    drop-first: true
 logging:
   file:
     name: logs/app.log

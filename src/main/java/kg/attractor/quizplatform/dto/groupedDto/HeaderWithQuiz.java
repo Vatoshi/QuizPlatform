@@ -14,6 +14,7 @@ import java.util.List;
 public class HeaderWithQuiz {
     private String name;
     private String category;
+    private Integer timeLimit;
     private String description;
     private List<QuizWithQuesDto> questions;
 }

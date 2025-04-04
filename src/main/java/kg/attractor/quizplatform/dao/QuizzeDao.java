@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,12 +60,13 @@ public class QuizzeDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into quizzes(title, description, creator_id,category_id) values(?, ?, ?, ?)"
+                    "insert into quizzes(title, description, creator_id,category_id,minute_time) values(?, ?, ?, ?,?)"
                             ,Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, quizzeDto.getTitle());
             ps.setString(2, quizzeDto.getDescription());
             ps.setLong(3, userId);
             ps.setLong(4,categoryId);
+            ps.setInt(5, quizzeDto.getTimeLimit());
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();
@@ -145,4 +147,36 @@ public class QuizzeDao {
         }
     }
 
+    public Long getTime(Long quizId) {
+        String sql = "select minute_time from quizzes where id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Long.class, quizId);
+        }catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void createTimeToAnswer(Long quizId, Long answerId) {
+        String sql = "insert into time_to (quiz_id, user_id) values (?, ?)";
+        jdbcTemplate.update(sql, quizId, answerId);
+    }
+
+    public void deleteTime(Long quizId, Long answerId) {
+        String sql = "delete from time_to where quiz_id = ? and user_id = ?";
+        jdbcTemplate.update(sql, quizId, answerId);
+    }
+
+    public Time getStartsTime(Long quizId, Long userId) {
+        return jdbcTemplate.queryForObject("select starts from time_to where quiz_id = ? and user_id = ?", Time.class, quizId, userId);
+    }
+
+    public Integer getTimeLimit(Long quizId) {
+        String sql = "select minute_time from quizzes where id = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Integer.class, quizId);
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
 }
