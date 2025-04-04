@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class HeaderWithQuiz {
     private String name;
+    private String category;
     private String description;
     private List<QuizWithQuesDto> questions;
 }

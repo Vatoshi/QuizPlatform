@@ -4,6 +4,7 @@ import kg.attractor.quizplatform.dto.groupedDto.GetAllQuizDto;
 import kg.attractor.quizplatform.dto.modelsDto.OptionDto;
 import kg.attractor.quizplatform.dto.modelsDto.QuestionDto;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
+import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -23,6 +24,12 @@ import java.util.Map;
 public class QuizzeDao {
     private final JdbcTemplate jdbcTemplate;
 
+    public String getCategory(Long quizId) {
+        String sql = "select category_id from quizzes where id = ?";
+        Long id = jdbcTemplate.queryForObject(sql, Long.class, quizId);
+        return jdbcTemplate.queryForObject("select category_name from categories where id = ?", String.class, id);
+    }
+
     public String getQuizTitle(String quiztitle) {
         String sql = "select title from quizzes where title = ?";
         try {
@@ -32,17 +39,29 @@ public class QuizzeDao {
         }
     }
 
+    private Long getCategoryId(String category) {
+        String sql = "select id from categories where category_name = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Long.class, category);
+        } catch (Exception e) {
+            throw new NotFound("Такой категории не существует");
+        }
+
+    }
+
     // при ошибке счетчика truecount предыдущие операции сохраняются в базе
     @Transactional
     public void createQuiz(QuizzeDto quizzeDto, Long userId) {
+        Long categoryId = getCategoryId(quizzeDto.getCategory());
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection.prepareStatement(
-                    "insert into quizzes(title, description, creator_id) values(?, ?, ?)"
+                    "insert into quizzes(title, description, creator_id,category_id) values(?, ?, ?, ?)"
                             ,Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, quizzeDto.getTitle());
             ps.setString(2, quizzeDto.getDescription());
             ps.setLong(3, userId);
+            ps.setLong(4,categoryId);
             return ps;
         }, keyHolder);
         Number key = keyHolder.getKey();

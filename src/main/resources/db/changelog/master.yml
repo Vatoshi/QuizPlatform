@@ -13,8 +13,8 @@ databaseChangeLog:
       file: db/changelog/initial/006_role_data.yml
   - include:
       file: db/changelog/initial/007fk-role.yml
-  - include:
-      file: db/changelog/initial/008_add-user.yml
+#  - include:
+#      file: db/changelog/initial/008_add-user.yml
   - include:
       file: db/changelog/initial/009_addScoreFromUserToQuiz.yml
   - include:
@@ -23,3 +23,5 @@ databaseChangeLog:
       file: db/changelog/initial/011_add category in quiz.yml
   - include:
       file: db/changelog/initial/insert.sql
+  - include:
+      file: db/changelog/initial/012_add again auto increment.yml

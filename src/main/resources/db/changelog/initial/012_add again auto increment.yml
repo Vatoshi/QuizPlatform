@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      author: eric
+      id: auto_increment_questions
+      changes:
+        - addAutoIncrement:
+            columnName: id
+            tableName: questions
+            columnDataType: bigint
+            startWith: 16
+            incrementBy: 1
+
+  - changeSet:
+      author: eric
+      id: auto_increment_options
+      changes:
+        - addAutoIncrement:
+            columnName: id
+            tableName: options
+            columnDataType: bigint
+            startWith: 46
+            incrementBy: 1

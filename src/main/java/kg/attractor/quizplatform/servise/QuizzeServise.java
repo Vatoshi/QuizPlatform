@@ -9,6 +9,7 @@ import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,7 +41,8 @@ public class QuizzeServise {
 
     public HeaderWithQuiz getQuizToAnswer(Long quizId) {
         String quizTitle = quizWithQuesDao.getTitle(quizId);
-        HeaderWithQuiz headerWithQuiz = new HeaderWithQuiz(quizTitle,
+        String category = quizzeDao.getCategory(quizId);
+        HeaderWithQuiz headerWithQuiz = new HeaderWithQuiz(quizTitle, category,
                 "Отправлять ответы поочередно с верху в вниз, АЙДИ данного квиза " + quizId
                 + ". Также не забывайте пройти квиз можно лишь раз",
                 quizWithQuesDao.getQuizToAnswer(quizId));

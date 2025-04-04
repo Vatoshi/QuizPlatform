@@ -12,6 +12,8 @@ public class QuizzeDto {
     @NotNull(message = "обязательный ввод")
     @Size(min = 3, max = 50, message = "название должно содержать минимум 3 символа, максимум 50")
     private String title;
+    @NotNull(message = "веддите существующую категорию")
+    private String category;
     @NotNull
     @Size(min = 3, max = 100, message = "описание должно содержать минимум 3 символа")
     private String description;
