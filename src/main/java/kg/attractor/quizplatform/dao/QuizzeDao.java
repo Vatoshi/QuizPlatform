@@ -96,18 +96,14 @@ public class QuizzeDao {
     }
 
     public List<GetAllQuizDto> getAllQuiz() {
-        String sqlGetName = "select title from quizzes";
-        List<String> quizNames = jdbcTemplate.queryForList(sqlGetName, String.class);
         List<GetAllQuizDto> getAllQuizDtos = new ArrayList<>();
-        for(String quizName : quizNames) {
-            String sql = "select q.id, q.quiz_id, qu.title "
-                    + "from questions q "
-                    + "join quizzes qu on q.quiz_id = qu.id "
-                    + "where qu.title = ?";
-            List<Map<String, Object>> questionList = jdbcTemplate.queryForList(sql, quizName);
-            int sum = questionList.size();
-            Long id = quizId(quizName);
-            getAllQuizDtos.add(new GetAllQuizDto(id,quizName,sum));
+        List<Long> quizzesId = jdbcTemplate.queryForList("select id from quizzes", Long.class);
+        for (Long quizId : quizzesId) {
+            String name = jdbcTemplate.queryForObject("select title from quizzes where id = ?", String.class, quizId);
+            Long categoryId = jdbcTemplate.queryForObject("select category_id from quizzes where id = ?", Long.class, quizId);
+            String categoryName = jdbcTemplate.queryForObject("select category_name from categories where id = ?", String.class, categoryId);
+            List<Long> questionIds = jdbcTemplate.queryForList("select id from questions where quiz_id = ?", Long.class, quizId);
+            getAllQuizDtos.add(new GetAllQuizDto(quizId, categoryName, name, questionIds.size()));
         }
         return getAllQuizDtos;
     }

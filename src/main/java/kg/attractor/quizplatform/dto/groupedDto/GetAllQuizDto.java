@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetAllQuizDto {
     private Long id;
+    private String category;
     private String quizName;
     private Integer questionCount;
 }
