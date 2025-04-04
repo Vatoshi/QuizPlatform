@@ -9,3 +9,8 @@ spring:
   liquibase:
     change-log: classpath:/db/changelog/master.yml
 #    drop-first: true
+logging:
+  file:
+    name: logs/app.log
+  level:
+    org.hibernate.SQL: DEBUG
