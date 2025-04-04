@@ -3,16 +3,21 @@ package kg.attractor.quizplatform.dao;
 import kg.attractor.quizplatform.dto.groupedDto.GetAllQuizDto;
 import kg.attractor.quizplatform.dto.modelsDto.OptionDto;
 import kg.attractor.quizplatform.dto.modelsDto.QuestionDto;
+import kg.attractor.quizplatform.dto.modelsDto.QuizDto;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.exeptions.NotFound;
+import kg.attractor.quizplatform.util.PaginationParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.EmptyResultDataAccessException;
+//import org.springframework.data.domain.PageRequest;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
+//import org.springframework.data.domain.Page;
+//import org.springframework.data.domain.PageImpl;
+//import org.springframework.data.domain.Pageable;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -113,4 +118,46 @@ public class QuizzeDao {
         String sql = "select id from quizzes where title = ?";
         return jdbcTemplate.queryForObject(sql, Long.class, name);
     }
+
+    public List<QuizDto> getAll(PaginationParam param) {
+        if (param.getPage() == null || param.getPage() < 1) {
+            param.setPage(1);
+        }
+        if (param.getLimit() == null || param.getLimit() < 1) {
+            param.setLimit(5);
+        }
+        int offset = (param.getPage() - 1) * param.getLimit();
+
+        if (param.getCategory() != null) {
+            Long categoryId = getCategoryId(param.getCategory());
+
+            String sql = "select id, title, description, category_id from quizzes " +
+                    "where category_id = ? order by id limit ? offset ?";
+
+            return jdbcTemplate.query(
+                    sql,
+                    new Object[]{categoryId, param.getLimit(), offset},
+                    (rs, rowNum) -> new QuizDto(
+                            rs.getLong("id"),
+                            rs.getString("title"),
+                            rs.getLong("category_id"),
+                            rs.getString("description")
+                    )
+            );
+        } else {
+            String sql = "select id, title, description, category_id from quizzes order by id limit ? offset ?";
+
+            return jdbcTemplate.query(
+                    sql,
+                    new Object[]{param.getLimit(), offset},
+                    (rs, rowNum) -> new QuizDto(
+                            rs.getLong("id"),
+                            rs.getString("title"),
+                            rs.getLong("category_id"),
+                            rs.getString("description")
+                    )
+            );
+        }
+    }
+
 }

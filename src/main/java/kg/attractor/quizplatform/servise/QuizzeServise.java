@@ -5,11 +5,13 @@ import kg.attractor.quizplatform.dao.QuizWithQuesDao;
 import kg.attractor.quizplatform.dao.QuizzeDao;
 import kg.attractor.quizplatform.dto.groupedDto.*;
 import kg.attractor.quizplatform.dto.modelsDto.OptionsDto;
+import kg.attractor.quizplatform.dto.modelsDto.QuizDto;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.exeptions.NotFound;
+import kg.attractor.quizplatform.util.PaginationParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
+//import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -135,4 +137,12 @@ public class QuizzeServise {
         return ratings;
     }
 
+    public List<QuizDto> getQuizzes(int page, int limit, String category) {
+        PaginationParam request = new PaginationParam();
+        request.setPage(page);
+        request.setLimit(limit);
+        request.setCategory(category);
+
+        return quizzeDao.getAll(request);
+    }
 }

@@ -2,9 +2,11 @@ package kg.attractor.quizplatform.controler;
 
 import jakarta.validation.Valid;
 import kg.attractor.quizplatform.dto.groupedDto.*;
+import kg.attractor.quizplatform.dto.modelsDto.QuizDto;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.servise.QuizzeServise;
 import lombok.RequiredArgsConstructor;
+//import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -36,6 +38,17 @@ public class QuizContoller {
     @GetMapping("quizzes")
     public ResponseEntity<List<GetAllQuizDto>> getAllQuiz() {
         return ResponseEntity.status(HttpStatus.FOUND).body(quizzeService.getQuizzes());
+    }
+
+    @GetMapping("quizzespag")
+    public ResponseEntity<List<QuizDto>> getAllQuiz(
+            @RequestParam(value = "page") Integer page,
+            @RequestParam(value = "limit") Integer limit,
+            @RequestParam(value = "category",required = false) String category
+    ) {
+        return ResponseEntity.ok(
+                quizzeService.getQuizzes(page, limit, category)
+        );
     }
 
     //получение квиза с варинатами ответа без ответа
