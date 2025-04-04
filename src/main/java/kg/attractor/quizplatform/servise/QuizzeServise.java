@@ -11,7 +11,6 @@ import kg.attractor.quizplatform.exeptions.NotFound;
 import kg.attractor.quizplatform.util.PaginationParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-//import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import java.sql.Time;
@@ -93,8 +92,10 @@ public class QuizzeServise {
         HeaderWithQuesAndAnswer header = new HeaderWithQuesAndAnswer(mark,solves, LocalDateTime.now());
         Long userId = quizzeDao.UserId(username);
         Integer i = quizResultsDao.getQuizResult(userId, quizId);
-        Long minute = quizzeDao.getTime(quizId);
+        Integer minute = quizzeDao.getTime(quizId);
         System.out.println(minute);
+        LocalDateTime startssTime = quizzeDao.getStartsTime(quizId, userId);
+        System.out.println(startssTime);
         if (minute == null) {
             if (i == null) {
                 quizResults(header, userId, quizId);
@@ -103,27 +104,36 @@ public class QuizzeServise {
                 throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
             }
         } else {
-                Time nowTime = Time.valueOf(LocalTime.now());
-                Time startsTime = quizzeDao.getStartsTime(quizId, userId);
-                LocalTime nowTimeL = nowTime.toLocalTime();
-                LocalTime startsTimeL = startsTime.toLocalTime();
-                long minutesBetween = ChronoUnit.MINUTES.between(startsTimeL, nowTimeL);
-                if (minutesBetween > minute) {
-                    if (i == null) {
-                        log.info("пользователь не успел по времени");
-                        quizResults(header, userId, quizId);
-                    } else {
-                        log.info("Возможно вы уже прошли данный квиз");
-                        throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
-                    }
+            LocalDateTime startTime = quizzeDao.getStartsTime(quizId, userId);
+
+            int durationSeconds = quizzeDao.getTime(quizId);
+
+            LocalDateTime now = LocalDateTime.now();
+
+            long secondsBetween = ChronoUnit.SECONDS.between(startTime, now);
+
+            System.out.println("Start time: " + startTime);
+            System.out.println("Current time: " + now);
+            System.out.println("Seconds passed: " + secondsBetween);
+            System.out.println("Allowed duration: " + durationSeconds);
+
+            if (secondsBetween > durationSeconds) {
+                if (i == null) {
+                    log.info("Пользователь не успел по времени (просрочено {} секунд)", secondsBetween - durationSeconds);
+                    quizResultsTime(header, userId, quizId);
                 } else {
-                    if (i == null) {
-                        quizResultsTime(header, userId, quizId);
-                    } else {
-                        log.info("Возможно вы уже прошли данный квиз");
-                        throw new IllegalArgumentException("Возможно вы уже прошли данный квиз");
-                    }
+                    log.warn("Пользователь уже завершил квиз");
+                    throw new IllegalArgumentException("Вы уже завершили этот квиз");
                 }
+            } else {
+                if (i == null) {
+                    log.info("Ответ принят в срок (осталось {} секунд)", durationSeconds - secondsBetween);
+                    quizResults(header, userId, quizId);
+                } else {
+                    log.warn("Попытка повторной отправки ответов");
+                    throw new IllegalArgumentException("Вы уже завершили этот квиз");
+                }
+            }
         }
         quizzeDao.deleteTime(quizId, userId);
         log.info("юзер ответил");

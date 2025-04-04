@@ -18,6 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -146,10 +149,11 @@ public class QuizzeDao {
         }
     }
 
-    public Long getTime(Long quizId) {
+    public Integer getTime(Long quizId) {
         String sql = "select minute_time from quizzes where id = ?";
         try {
-            return jdbcTemplate.queryForObject(sql, Long.class, quizId);
+            Integer i = jdbcTemplate.queryForObject(sql, Integer.class, quizId);
+            return i * 60;
         }catch (Exception e) {
             return null;
         }
@@ -165,8 +169,12 @@ public class QuizzeDao {
         jdbcTemplate.update(sql, quizId, answerId);
     }
 
-    public Time getStartsTime(Long quizId, Long userId) {
-        return jdbcTemplate.queryForObject("select starts from time_to where quiz_id = ? and user_id = ?", Time.class, quizId, userId);
+    public LocalDateTime getStartsTime(Long quizId, Long userId) {
+        try {
+        return jdbcTemplate.queryForObject("select starts from time_to where quiz_id = ? and user_id = ?", LocalDateTime.class, quizId, userId);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("Может хоть на вопросы взглянете");
+        }
     }
 
     public Integer getTimeLimit(Long quizId) {
