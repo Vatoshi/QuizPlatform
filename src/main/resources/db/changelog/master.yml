@@ -17,3 +17,9 @@ databaseChangeLog:
       file: db/changelog/initial/008_add-user.yml
   - include:
       file: db/changelog/initial/009_addScoreFromUserToQuiz.yml
+  - include:
+      file: db/changelog/initial/010_create category.yml
+  - include:
+      file: db/changelog/initial/011_add category in quiz.yml
+  - include:
+      file: db/changelog/initial/insert.sql

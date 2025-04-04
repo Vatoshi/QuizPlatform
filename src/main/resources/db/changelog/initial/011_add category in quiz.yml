@@ -1,0 +1,23 @@
+databaseChangeLog:
+  - changeSet:
+      author: eric
+      id: add category_id in quiz
+      changes:
+        - addColumn:
+            tableName: quizzes
+            columns:
+              - column:
+                  name: category_id
+                  type: long
+  - changeSet:
+      author: eric
+      id: add fk
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: quizzes
+            baseColumnNames: category_id
+            constraintName: fk_quizzes_category
+            referencedTableName: categories
+            referencedColumnNames: id
+            onDelete: CASCADE
+            onUpdate: CASCADE
