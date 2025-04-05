@@ -32,17 +32,15 @@ public class QuizResultsDao {
         }
     }
 
-    public Long getQuizResultInteger(Long userId, Long quizId) {
+    public Integer getQuizResultInteger(Long userId, Long quizId) {
         String sql = "select id from quiz_results where user_id = ? and quiz_id = ?";
-        try {
-            return jdbcTemplate.queryForObject(sql, Long.class, userId, quizId);
-        } catch (Exception e) {
-            log.info("квиз езе не пройден");
-            throw new NotFound("Вы еще не проходили данный квиз");
-        }
+        System.out.println(userId);
+        System.out.println(quizId);
+            return jdbcTemplate.queryForObject(sql, Integer.class, userId, quizId);
+
     }
 
-    public List<Long> questionId (Long quizId) {
+    public List<Long> questionId (Integer quizId) {
         String sql = "select id from questions where quiz_id = ?";
         return jdbcTemplate.queryForList(sql, Long.class, quizId);
     }

@@ -163,7 +163,7 @@ public class QuizzeServise {
     public GetScoreDto getQuizResults (Long quizId, String username) {
         Long userId = quizzeDao.UserId(username);
 
-        Long getIdResults = quizResultsDao.getQuizResultInteger(quizId, userId);
+        Integer getIdResults = quizResultsDao.getQuizResultInteger(quizId, userId);
         List<Long> questionIds = quizResultsDao.questionId(getIdResults);
         Integer answerscount = questionIds.size();
         Integer score = quizResultsDao.getQuizResult(userId, quizId);

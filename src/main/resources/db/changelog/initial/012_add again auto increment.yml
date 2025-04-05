@@ -28,5 +28,5 @@ databaseChangeLog:
             columnName: id
             tableName: quiz_results
             columnDataType: bigint
-            startWith: 6
+            startWith: 7
             incrementBy: 1
