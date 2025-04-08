@@ -15,5 +15,4 @@ import java.util.List;
 public class HeaderWithQuesAndAnswer {
     private String mark;
     private List<QuesAndAnswerDto> quesAndAnswerDtos;
-    private LocalDateTime dateTime;
 }

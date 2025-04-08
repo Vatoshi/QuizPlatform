@@ -89,7 +89,7 @@ public class QuizzeServise {
             QuesAndAnswerDto opa = new QuesAndAnswerDto(ques,correctOption,answers.get(i));
             solves.add(opa);
         }
-        HeaderWithQuesAndAnswer header = new HeaderWithQuesAndAnswer(mark,solves, LocalDateTime.now());
+        HeaderWithQuesAndAnswer header = new HeaderWithQuesAndAnswer(mark,solves);
         Long userId = quizzeDao.UserId(username);
         Integer i = quizResultsDao.getQuizResult(userId, quizId);
         Integer minute = quizzeDao.getTime(quizId);
@@ -163,7 +163,7 @@ public class QuizzeServise {
     public GetScoreDto getQuizResults (Long quizId, String username) {
         Long userId = quizzeDao.UserId(username);
 
-        Integer getIdResults = quizResultsDao.getQuizResultInteger(quizId, userId);
+        Long getIdResults = quizResultsDao.getQuizResultInteger(quizId, userId);
         List<Long> questionIds = quizResultsDao.questionId(getIdResults);
         Integer answerscount = questionIds.size();
         Integer score = quizResultsDao.getQuizResult(userId, quizId);
