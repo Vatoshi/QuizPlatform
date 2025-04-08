@@ -1,6 +1,5 @@
 package kg.attractor.quizplatform.dao;
 
-import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

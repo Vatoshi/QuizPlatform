@@ -6,7 +6,6 @@ import kg.attractor.quizplatform.dto.modelsDto.QuizDto;
 import kg.attractor.quizplatform.dto.modelsDto.QuizzeDto;
 import kg.attractor.quizplatform.servise.QuizzeServise;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;

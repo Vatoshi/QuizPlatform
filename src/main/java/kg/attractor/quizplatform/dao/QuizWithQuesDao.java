@@ -1,8 +1,6 @@
 package kg.attractor.quizplatform.dao;
 
-import kg.attractor.quizplatform.dto.groupedDto.HeaderWithQuesAndAnswer;
 import kg.attractor.quizplatform.dto.modelsDto.OptionsDto;
-import kg.attractor.quizplatform.dto.groupedDto.QuesAndAnswerDto;
 import kg.attractor.quizplatform.dto.groupedDto.QuizWithQuesDto;
 import kg.attractor.quizplatform.exeptions.NotFound;
 import lombok.RequiredArgsConstructor;

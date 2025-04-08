@@ -7,8 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
-
-
 import java.util.List;
 import java.util.Map;
 
@@ -39,8 +37,6 @@ public class QuizResultsDao {
         } catch (Exception e) {
             throw new NotFound("Вы езе не проходили данную викторину");
         }
-
-
     }
 
     public List<Long> questionId (Long quizId) {

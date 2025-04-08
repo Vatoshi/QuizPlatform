@@ -17,10 +17,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
-import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,7 +50,6 @@ public class QuizzeDao {
             log.info("такой категории не существует");
             throw new NotFound("Такой категории не существует");
         }
-
     }
 
     @Transactional
