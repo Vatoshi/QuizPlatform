@@ -27,7 +27,9 @@ public class UserController {
 
     @GetMapping("/{userId}/statistics")
     public ResponseEntity<UserStatistic> getUserStatistic(@PathVariable Long userId) {
-        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserStat(userId));
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return ResponseEntity.status(HttpStatus.OK).body(userService.getUserStat(userId,username));
     }
 
     @GetMapping("/global-statistics")

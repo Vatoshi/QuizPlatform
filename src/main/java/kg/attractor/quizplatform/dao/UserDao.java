@@ -28,4 +28,14 @@ public class UserDao {
             return null;
         }
     }
+
+    public Long getIdfromEmailExist(String email) {
+        String sql = "select id from users where email = ?";
+        try {
+            return jdbcTemplate.queryForObject(sql, Long.class, email);
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
 }

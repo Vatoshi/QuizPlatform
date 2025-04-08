@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Slf4j
 @Service
@@ -39,7 +40,11 @@ public class UserService {
         return userDto;
     }
 
-    public UserStatistic getUserStat(Long userId) {
+    public UserStatistic getUserStat(Long userId, String username) {
+        Long userIdAuth = userDao.getIdfromEmailExist(username);
+        if (!Objects.equals(userId, userIdAuth)) {
+            throw new NotFound("u cant check not your statistic");
+        }
         Integer passedQuiz = userStatisticDao.CountAllPassedQuizzes(userId);
         if (passedQuiz == null) { throw new NotFound("The user has no statistics (has not completed any quizzes) or not exist");}
         Double averageScore = userStatisticDao.AverageScore(userId);
